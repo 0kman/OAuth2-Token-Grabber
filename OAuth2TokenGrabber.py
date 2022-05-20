@@ -775,9 +775,8 @@ Currently supported auth flows:
         
         # Text fields
         self.txtTokenURL = JTextField()
-        self.txtTokenURL.setText("10.0.1.231/issuer1/token")
         self.txtPort = JTextField()
-        self.txtPort.setText("8080")
+        self.txtPort.setText("80")
         self.txtCustomHeader = JTextField()
         self.txtCustomHeader.setText("Authorization: Bearer")
         self.txtCustomHeader.setEnabled(False)
@@ -786,11 +785,8 @@ Currently supported auth flows:
         self.txtPassword = JTextField()
         self.txtPassword.setEnabled(False)
         self.txtClientID = JTextField()
-        self.txtClientID.setText("test")
         self.txtClientSecret = JTextField()
-        self.txtClientSecret.setText("test")
         self.txtScope = JTextField()
-        self.txtScope.setText("scope1")
         
         # Buttons
         self.btnTest = JButton(actionPerformed=test)
