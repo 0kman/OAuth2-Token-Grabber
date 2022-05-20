@@ -775,6 +775,7 @@ Currently supported auth flows:
         
         # Text fields
         self.txtTokenURL = JTextField()
+        self.txtTokenURL.setText("example-token-endpoint.com/default/token")
         self.txtPort = JTextField()
         self.txtPort.setText("80")
         self.txtCustomHeader = JTextField()
@@ -787,6 +788,7 @@ Currently supported auth flows:
         self.txtClientID = JTextField()
         self.txtClientSecret = JTextField()
         self.txtScope = JTextField()
+        self.txtScope.setText("read")
         
         # Buttons
         self.btnTest = JButton(actionPerformed=test)
