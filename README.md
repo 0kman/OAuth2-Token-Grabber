@@ -1,2 +1,7 @@
 # OAuth2-Token-Grabber
-Burpsuite Extension to grab OAuth2 access tokens and adds them to requests as custom headers
+Burp Suite extension to grab OAuth2 access tokens and add them to requests as a custom header
+
+Currently supported auth flows:
+- Client Credentials
+- Password Credentials
+- Resource Owner Password Credentials (ROPC)
