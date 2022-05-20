@@ -847,7 +847,19 @@ Grabs OAuth2 access tokens and adds them to requests as custom headers.
 Currently supported auth flows:
     - Client Credentials
     - Password Credentials
-    - Resource Owner Password Credentials (ROPC)""")
+    - Resource Owner Password Credentials (ROPC)
+
+Usage
+    - Select desired grant type & client authentication method
+    - (Optional) Set a custom header for access tokens to be added to
+    - Input token URL
+    - Input relevant credentials and scope
+    - Hit 'Test'. You should recieve an access token (Otherwise, try debug mode)
+    - Select desired tool scope
+    - Hit 'Activate'. The access token will then be added to all in scope traffic
+    - When the access token expires, a new one will be requested automatically
+    
+https://github.com/0kman/OAuth2-Token-Grabber""")
         txtAbout.setEditable(False)
         caret = self.txtLog.getCaret()
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE)
