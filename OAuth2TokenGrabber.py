@@ -777,7 +777,7 @@ Currently supported auth flows:
         self.txtTokenURL = JTextField()
         self.txtTokenURL.setText("example-token-endpoint.com/default/token")
         self.txtPort = JTextField()
-        self.txtPort.setText("80")
+        self.txtPort.setText("443")
         self.txtCustomHeader = JTextField()
         self.txtCustomHeader.setText("Authorization: Bearer")
         self.txtCustomHeader.setEnabled(False)
@@ -801,7 +801,7 @@ Currently supported auth flows:
         self.cmbGrantType = JComboBox(model, actionListener=selectGrantType)
         model2 = ('http://', 'https://')
         self.cmbProtocol = JComboBox(model2)
-        self.cmbProtocol.setSelectedIndex(0)
+        self.cmbProtocol.setSelectedIndex(1)
         model3 = ('HTTP/1.1', 'HTTP/2')
         self.cmbHttpVersion = JComboBox(model3)
         model4 = ('In Body', 'Basic Auth')
@@ -854,7 +854,7 @@ Usage
     - (Optional) Set a custom header for access tokens to be added to
     - Input token URL
     - Input relevant credentials and scope
-    - Hit 'Test'. You should receive an access token (Otherwise, try debug mode)
+    - Hit 'Test'. You should recieve an access token (Otherwise, try debug mode)
     - Select desired tool scope
     - Hit 'Activate'. The access token will then be added to all in scope traffic
     - When the access token expires, a new one will be requested automatically
