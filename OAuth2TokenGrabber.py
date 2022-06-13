@@ -9,6 +9,7 @@ from javax.swing import (JSplitPane, JTabbedPane, JPanel, JLabel, JSeparator, JS
 from javax.swing.text import DefaultCaret
 from java.lang import Short
 from java.awt import Dimension
+from java.lang import Exception
 
 class BurpExtender(IBurpExtender, ITab, IHttpListener):
 
@@ -293,7 +294,7 @@ Currently supported auth flows:
                 service = self._helpers.buildHttpService(self.host, int(self.port), self.protocol)
             
             except:
-                self.writeLog("Invalid host or port")
+                self.writeLog("Invalid port?")
                 self.currentToken[1] = "error"
                 return
             
@@ -321,19 +322,10 @@ Currently supported auth flows:
                     self.writeLog("No response! Try debug mode?")
                     self.currentToken[1] = "error"
                     return
-                
-                # If response code not 200
-                if self._helpers.analyzeResponse(response).getStatusCode() != 200:
-                    self.writeLog("Something went wrong! Try debug mode?")
-                    self.currentToken[1] = "error"
-                    
-                    if self.debugMode:
-                        self.writeLog(self.debugResponse % (self._helpers.bytesToString(response)))
-                    return
             
             except Exception as e:
                 
-                self.writeLog("Something went wrong! Consult Extender output for details.")
+                self.writeLog("Ahhh! Invalid URL?? Consult Extender output for details.")
                 self.currentToken[1] = "error"
                 print str(e)
                 return
@@ -348,16 +340,25 @@ Currently supported auth flows:
             offset = info.getBodyOffset()
             
             # Create json string
-            jsonString = json.loads(self._helpers.bytesToString(response)[offset:])
+            try:
+                
+                jsonString = json.loads(self._helpers.bytesToString(response)[offset:])
+            
+            except:
+                
+                self.writeLog("Something went wrong! Check token URL?")
+                self.currentToken[1] = "error"
+                return
             
             # Try get access_token
             try:
+                
                 token = jsonString["access_token"]
             
             # Failed
             except:
                 
-                self.writeLog("Failed to retrieve token")
+                self.writeLog("Failed to retrieve token. Try debug mode?")
                 self.currentToken[1] = "error"
                 
                 # Try get error
@@ -607,6 +608,13 @@ Currently supported auth flows:
                 self.txtClientSecret.setEnabled(True)
                 self.txtScope.setEnabled(True)
                 self.cmbClientAuth.setEnabled(True)
+                self.chkRepeater.setEnabled(True)
+                self.chkIntruder.setEnabled(True)
+                self.chkScanner.setEnabled(True)
+                self.chkExtender.setEnabled(True)
+                self.chkSequencer.setEnabled(True)
+                self.chkTarget.setEnabled(True)
+                self.chkProxy.setEnabled(True)
                 if self.chkCustomHeader.isSelected():
                     self.txtCustomHeader.setEnabled(True)
                 self.chkCustomHeader.setEnabled(True)
@@ -630,6 +638,13 @@ Currently supported auth flows:
                 self.txtScope.setEnabled(False)
                 self.cmbClientAuth.setEnabled(False)
                 self.chkCustomHeader.setEnabled(False)
+                self.chkRepeater.setEnabled(False)
+                self.chkIntruder.setEnabled(False)
+                self.chkScanner.setEnabled(False)
+                self.chkExtender.setEnabled(False)
+                self.chkSequencer.setEnabled(False)
+                self.chkTarget.setEnabled(False)
+                self.chkProxy.setEnabled(False)
                 if self.chkCustomHeader.isSelected():
                     self.txtCustomHeader.setEnabled(True)
                 self.txtCustomHeader.setEnabled(False)
