@@ -3,6 +3,7 @@ from burp import IHttpListener
 from burp import ITab
 import urllib2, json, base64, time, datetime
 from urllib import quote_plus
+from collections import OrderedDict
 from threading import Lock, Thread
 from javax import swing
 from javax.swing import (JSplitPane, JTabbedPane, JPanel, JLabel, JSeparator, JScrollPane, JTextArea, JTextField, JComboBox, JButton, JCheckBox, GroupLayout, LayoutStyle, SwingConstants)
@@ -241,6 +242,16 @@ Currently supported auth flows:
                 # Write to log
                 self.txtLog.text += "[" + now.strftime("%H:%M:%S") + "] " + message + "\n"
                 return
+        
+        #
+        # Recursively search for and extract first token value from JSON
+        #
+        def findToken(self, v, k):
+            for k1 in v:
+                if k in k1.lower():
+                    if type(v[k1]) != type(v):
+                        return v[k1]
+                    return self.findToken(v[k1], k)
                 
         # Make request
         def go(self):
@@ -342,7 +353,8 @@ Currently supported auth flows:
             # Create json string
             try:
                 
-                jsonString = json.loads(self._helpers.bytesToString(response)[offset:])
+                # Parse json to OrderedDict to preserve order
+                jsonString = json.loads(self._helpers.bytesToString(response)[offset:], object_pairs_hook=OrderedDict)
             
             except:
                 
@@ -352,19 +364,21 @@ Currently supported auth flows:
             
             # Try get access_token
             try:
-                
-                token = jsonString["access_token"]
+                token = self.findToken(jsonString, "token")
+                if token == None:
+                    raise Exception("Couldn't get token")
             
             # Failed
             except:
-                
+                    
                 self.writeLog("Failed to retrieve token. Try debug mode?")
                 self.currentToken[1] = "error"
                 
                 # Try get error
                 try:
-                    error = jsonString["error"]
-                    self.writeLog("Error: " + error)
+                    error = self.findToken(jsonString, "error")
+                    if error != None:
+                        self.writeLog("Error: " + error)
                 
                 # Failed again!
                 except:
@@ -374,11 +388,12 @@ Currently supported auth flows:
             # Try get 'expires_in' value, otherwise ingore
             try:
                 
-                exp = jsonString["expires_in"]
+                exp = self.findToken(jsonString, "expires_in")
                 
                 # Set expire time
-                with self.tokenLock:
-                    self.expireIn[0] = time.time() + exp
+                if exp != None:
+                    with self.tokenLock:
+                        self.expireIn[0] = time.time() + exp
             
             except:
                 pass
